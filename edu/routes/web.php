@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\SeminarController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +12,5 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [SeminarController::class, 'loadData'])->name("home");
+Route::post('checkAdd',[SeminarController::class, 'addSeminar'])->name("addSermina");
