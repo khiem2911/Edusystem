@@ -12,9 +12,10 @@ class SeminarController extends Controller
         $name = $request->name;
         $content = $request->content;
         $timestart =$request->timestart;
+        $timeend =$request->timeend;
         $query=false;
         $alert=false;
-        $values = array('name' => $name,'content' => $content,'time-start'=>$timestart);
+        $values = array('name' => $name,'content' => $content,'timestart'=>$timestart,'timeend'=>$timeend);
         try{
           $query=DB::table('Seminar')->insert($values);
         }catch(Exception)
@@ -24,25 +25,62 @@ class SeminarController extends Controller
         }
         if($query)
         {
-            alert()->success('Successed');
-            return view('welcome');
+            alert()->success('Add Successed');
+            return redirect()->route("home");
         }
         if($alert)
         {
             return redirect()->route('home', ['alert' => $alert]);
         }
     }
-    public function deleteAllSeminar(){
-
+    public function deleteAllSeminar(Request $request){
+        $id = $request->id;
+        $alert;
+        if($id==null)
+        {
+            $count = DB::table('Seminar')->count();
+            if($count==0)
+            {
+                $alert = alert()->warning('Nothing to delete');
+                return redirect()->route('home', ['alert' => $alert]);
+            }else
+            {
+                DB::table('Seminar')->delete();
+                $alert = alert()->success('Delete Successed');
+                return redirect()->route('home', ['alert' => $alert]);
+            }
+            $alert = alert()->warning('Please select at least 1 to delete');
+           return redirect()->route('home', ['alert' => $alert]);
+        }else
+        {
+            foreach($id as $item)
+            {
+                $deleted = DB::table('Seminar')->where('id', '=', $item)->delete();
+            }
+            if($deleted)
+        {
+            alert()->success('Delete Successed');
+            return redirect()->route("home");
+        }
+        }
     }
-    public function deleteSeminar(){
-
+    public function deleteSeminar($id){
+        $deleted = DB::table('Seminar')->where('id', '=', $id)->delete();
+        if($deleted)
+        {
+            alert()->success('Delete Successed');
+            return redirect()->route("home");
+        }
     }
     public function editSeminar(){
 
     }
-    public function loadData(){
-        $data = DB::select('select * from Seminar');
-        return view("welcome");
+    public function loadData(Request $request){
+        $data = DB::table('Seminar')->paginate(5);
+        if ($request->ajax()) {
+            return view('data', compact('data'));
+        }
+        return view('dashboard',compact('data'));
+
     }
 }
