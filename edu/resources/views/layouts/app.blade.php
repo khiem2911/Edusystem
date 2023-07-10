@@ -15,6 +15,7 @@
   <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -34,14 +35,12 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
     <!-- Custom styles for this template-->
       <link href="{{ asset('admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
 </head>
 
 <body id="page-top">
-
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -84,28 +83,29 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
+                    <div class="container">
+                        <div class="search">
+                            <input type="search" name="search" id="search" placeholder="Search seminar here" class="form-control" >
                         </div>
-                    </form>
+                    </div>
                 </nav>
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between">
                         <h1 class="mb-0">
                            List Seminars
                         </h1>
-                        <button type="button"  class="btn btn-primary">
-                          Filter
-                          </button>
+                      <div class="mb-0 btn btn-primary">
+                        <form action="">
+                            <div class="select-container">
+                                <select  id="filterser">
+                                    <option>ALL</option>
+                                    @foreach (\App\Constants\GlobalConstants::LIST as $item)
+                                    <option>{{$item}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                      </div>
                     </div>
                     <form method="post" action="{{url('deleteAll')}}">
                         {{ csrf_field() }}
@@ -175,23 +175,64 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript"> 
         $(document).ready(function(){
-          
     $("#myBtn").click(function(){
       $("#myModal").modal("show");
     })
     $("#closeModalBtn").click(function(){
       $("#myModal").modal("hide");
     })
-  $(document).on('click', '.pagination a',function(event)
+  $(document).on('click', '#deleteBtn',function(event)
+    {
+        return confirm('are you sure you want to delete this ');
+    });
+    $(document).on('click', '.pagination a',function(event)
     {
         event.preventDefault();
         var myurl = $(this).attr('href');
         var page=$(this).attr('href').split('page=')[1];
         getData(page);
     });
-  
+    $('#filterser').on('change',function(){
+        var select =$("#filterser option:selected").val();
+        console.log(select);
+        if(select)
+        {
+            if(select=="ALL")
+            {
+                $('.alldata').show();
+                $('.searchdata').hide();
+            }else
+            {
+                $('.alldata').hide();
+                $('.searchdata').show();
+            }
+          
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        $.ajax({
+            method:"GET",
+            url:"{{ route('filter') }}",
+            data:{
+                'select':select,
+            }
+                ,
+            success:function(data)
+            {
+                $('.searchdata').html(data);
+            }, 
+            error: (error) => {
+   }
+        })
+    });
+
 function getData(page){
     $.ajax({
         url: '?page=' + page,
@@ -206,6 +247,41 @@ function getData(page){
       alert('No response from server');
     });
   }
+
+  $('#search').on('keyup',function()
+    {
+        $value=$(this).val();
+        if($value)
+        {
+            $('.alldata').hide();
+            $('.searchdata').show();
+        }else{
+            $('.alldata').show();
+            $('.searchdata').hide();
+        }
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        $.ajax({
+            method:"GET",
+            url:"{{ route('search') }}",
+            data:{
+                'search':$value,
+            }
+                ,
+            success:function(data)
+            {
+                console.log(data);
+                $('.searchdata').html(data);
+            }, 
+            error: (error) => {
+                     console.log(JSON.stringify(error));
+   }
+        })
+    }
+  )
 })
           </script>
          

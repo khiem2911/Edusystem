@@ -93,12 +93,100 @@ class SeminarController extends Controller
         }
        
     }
-    public function loadData(Request $request){
-        $data = DB::table('Seminar')->paginate(5);
-        if ($request->ajax()) {
-            return view('data', compact('data'));
+    public function filterSeminar(Request $request){
+       $select = $request->select;
+       $output="";
+        if($select)
+        {
+            if($select=="Theo thứ tự giảm dần")
+            {
+                $data =  DB::table('Seminar')->orderBy('id', 'DESC')->paginate(5);
+                $output="";
+                foreach($data as $item)
+                {
+                    $output.=
+                    '
+                    <tr>
+                    <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+                    value='.$item->id.'>
+                    <td class="align-middle"> '.$item->id.' </td>
+                    <td class="align-middle"> '.$item->name.' </td>
+                    <td class="align-middle"> '.$item->content.' </td>
+                    <td class="align-middle"> '.$item->timestart.' </td>
+                    <td class="align-middle"> '.$item->timeend.' </td>
+                    <td class="align-middle">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                         <a  href="/EditSer/'.$item->id.'" class="btn btn-warning">Edit</a>
+                         <a id="deleteBtn" href="checkDelete/'.$item->id.'" class="btn btn-danger">Delete</a>
+                    </div>
+                 </td>
+                    </tr>
+                    ';
+                }
+                return response($output);
+            }
+            if($select=="A tới Z")
+            {
+                $data =  DB::table('Seminar')->orderBy('name', 'ASC')->paginate(5);
+                $output="";
+                foreach($data as $item)
+                {
+                    $output.=
+                    '
+                    <tr>
+                    <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+                    value='.$item->id.'>
+                    <td class="align-middle"> '.$item->id.' </td>
+                    <td class="align-middle"> '.$item->name.' </td>
+                    <td class="align-middle"> '.$item->content.' </td>
+                    <td class="align-middle"> '.$item->timestart.' </td>
+                    <td class="align-middle"> '.$item->timeend.' </td>
+                    <td class="align-middle">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                         <a  href="/EditSer/'.$item->id.'" class="btn btn-warning">Edit</a>
+                         <a id="deleteBtn" href="checkDelete/'.$item->id.'" class="btn btn-danger">Delete</a>
+                    </div>
+                 </td>
+                    </tr>
+                    ';
+                }
+                return response($output);
+            }
         }
-        return view('dashboard',compact('data'));
-
+    }
+    public function searchSeminar(Request $request){
+        $data =  DB::table('Seminar')->where('name', 'like', '%' . $request->search . '%')->paginate(5);
+        $output="";
+        foreach($data as $item)
+        {
+            $output.=
+            '
+            <tr>
+            <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+            value='.$item->id.'>
+            <td class="align-middle"> '.$item->id.' </td>
+            <td class="align-middle"> '.$item->name.' </td>
+            <td class="align-middle"> '.$item->content.' </td>
+            <td class="align-middle"> '.$item->timestart.' </td>
+            <td class="align-middle"> '.$item->timeend.' </td>
+            <td class="align-middle">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                 <a  href="/EditSer/'.$item->id.'" class="btn btn-warning">Edit</a>
+                 <a id="deleteBtn" href="checkDelete/'.$item->id.'" class="btn btn-danger">Delete</a>
+            </div>
+         </td>
+            </tr>
+            ';
+        }
+        return response($output);
+    }
+    public function loadData(Request $request){
+        
+            $data = DB::table('Seminar')->paginate(5);
+            if ($request->ajax()) {
+                return view('data', compact('data'));
+            }
+            return view('dashboard',compact('data'));
+        
     }
 }
