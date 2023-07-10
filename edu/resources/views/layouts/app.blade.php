@@ -111,7 +111,7 @@
                         {{ csrf_field() }}
               <div class="d-flex align-items-center justify-content-between">
                         <h1 class="mb-0">
-                            <button  type="submit" class="btn btn-danger m-o">
+                            <button onclick="return confirm('are you sure you want to delete all ')"  type="submit" class="btn btn-danger m-o">
                                 Delete All
                                </button>
                         </h1>
@@ -158,26 +158,6 @@
           </div>
         </div>
       </div>
-      <!-- Modal -->
-      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" id="closeDeleteModal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-             <h2>Are you sure want to delete</h2>
-            </div>
-            <div class="modal-footer">
-            
-            </div>
-          </div>
-        </div>
-      </div>
-
-   
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -201,17 +181,9 @@
     $("#myBtn").click(function(){
       $("#myModal").modal("show");
     })
-    $("#deleteBtn").click(function(){
-      $("#deleteModal").modal("show");
-    })
     $("#closeModalBtn").click(function(){
       $("#myModal").modal("hide");
     })
-  })
-  $(document).on('click', '#closeDeleteModal',function(event)
-    {
-      $("#deleteModal").modal("hide");
-    });
   $(document).on('click', '.pagination a',function(event)
     {
         event.preventDefault();
@@ -234,6 +206,7 @@ function getData(page){
       alert('No response from server');
     });
   }
+})
           </script>
          
 </body>

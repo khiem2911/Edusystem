@@ -72,8 +72,26 @@ class SeminarController extends Controller
             return redirect()->route("home");
         }
     }
-    public function editSeminar(){
-
+    public function updateSeminar(Request $request,$id){
+        $name = $request->name;
+        $content = $request->content;
+        $timestart =$request->timestart;
+        $timeend =$request->timeend;
+        $values = array('name' => $name,'content' => $content,'timestart'=>$timestart,'timeend'=>$timeend);
+        $query = DB::table('Seminar')->where('id', '=', $id)->update($values);
+        if($query)
+        {
+            alert()->success('Update Successed');
+        }
+        return redirect()->route("home");
+    }
+    public function editSeminar($id){
+        $data = DB::select('select * from Seminar where id = ?', [$id]);
+        if($data)
+        {
+            return view("update")->with("data",$data[0]);
+        }
+       
     }
     public function loadData(Request $request){
         $data = DB::table('Seminar')->paginate(5);

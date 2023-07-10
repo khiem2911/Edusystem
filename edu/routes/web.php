@@ -16,3 +16,5 @@ Route::post('checkAdd',[SeminarController::class, 'addSeminar'])->name("addSermi
 Route::get('/', [SeminarController::class, 'loadData'])->name("home");
 Route::get('checkDelete/{id}',[SeminarController::class, 'deleteSeminar'])->name("deleteSeminar");
 Route::post('deleteAll',[SeminarController::class, 'deleteAllSeminar']);
+Route::get('EditSer/{id}',[SeminarController::class, 'editSeminar'])->name("editSeminar");
+Route::post('updateSer/{id}',[SeminarController::class, 'updateSeminar'])->name("updateSeminar");

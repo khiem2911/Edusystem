@@ -22,7 +22,8 @@
             <td class="align-middle">{{$item->timeend}}</td>
             <td class="align-middle">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a id="deleteBtn"   type="button" class="btn btn-danger m-o" >Delete</a>
+                     <a  href="{{route("editSeminar",$item->id)}}" class="btn btn-warning">Edit</a>
+                     <a onclick="return confirm('are you sure you want to delete this ')" href="{{route("deleteSeminar",$item->id)}}" class="btn btn-danger">Delete</a>
                 </div>
             </td>
         </tr>
