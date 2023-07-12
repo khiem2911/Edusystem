@@ -107,7 +107,7 @@ class SeminarController extends Controller
                     $output.=
                     '
                     <tr>
-                    <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+                    <td class="text-center align-middle"><input name="id[]" type="checkbox" id="checkItem" 
                     value='.$item->id.'>
                     <td class="align-middle"> '.$item->id.' </td>
                     <td class="align-middle"> '.$item->name.' </td>
@@ -134,7 +134,7 @@ class SeminarController extends Controller
                     $output.=
                     '
                     <tr>
-                    <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+                    <td class="text-center align-middle"><input name="id[]" type="checkbox" id="checkItem" 
                     value='.$item->id.'>
                     <td class="align-middle"> '.$item->id.' </td>
                     <td class="align-middle"> '.$item->name.' </td>
@@ -162,7 +162,7 @@ class SeminarController extends Controller
             $output.=
             '
             <tr>
-            <td class="text-center"><input name="id[]" type="checkbox" id="checkItem" 
+            <td class="text-center align-middle"><input name="id[]" type="checkbox" id="checkItem" 
             value='.$item->id.'>
             <td class="align-middle"> '.$item->id.' </td>
             <td class="align-middle"> '.$item->name.' </td>
