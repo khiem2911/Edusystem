@@ -20,3 +20,4 @@ Route::get('EditSer/{id}',[SeminarController::class, 'editSeminar'])->name("edit
 Route::post('updateSer/{id}',[SeminarController::class, 'updateSeminar'])->name("updateSeminar");
 Route::get('/search',[SeminarController::class, 'searchSeminar'])->name("search");
 Route::get('/filter',[SeminarController::class, 'filterSeminar'])->name("filter");
+Route::post('test',[SeminarController::class, 'test'])->name("test");

@@ -8,6 +8,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 Use Exception;
 class SeminarController extends Controller
 {
+    /*
     public function addSeminar(Request $request) {
         $name = $request->name;
         $content = $request->content;
@@ -33,6 +34,7 @@ class SeminarController extends Controller
             return redirect()->route('home', ['alert' => $alert]);
         }
     }
+    */
     public function deleteAllSeminar(Request $request){
         $id = $request->id;
         $alert;
@@ -62,6 +64,49 @@ class SeminarController extends Controller
             alert()->success('Delete Successed');
             return redirect()->route("home");
         }
+        }
+    }
+    public function test(Request $request)  {
+        $name = $request->name;
+        $content = $request->content;
+        $timestart = $request->timestart;
+        $timeend = $request->timeend;
+        $query=false;
+        $values = array('name' => $name,'content' => $content,'timestart'=>$timestart,'timeend'=>$timeend);
+        try{
+            $query=DB::table('Seminar')->insert($values);
+          }catch(Exception)
+          {
+             $alert = alert()->error('Failed','Kiểm tra lại các ô nhập');
+             $request->flash();
+          }
+        if($query)
+        {
+            alert()->success('Added Successed');
+            $items = DB::table('Seminar')->paginate(5);
+            $output="";
+            foreach($items as $item)
+            {
+                $output.=
+                '
+                <tr>
+                <td class="text-center align-middle"><input name="id[]" type="checkbox" id="checkItem" 
+                value='.$item->id.'>
+                <td class="align-middle"> '.$item->id.' </td>
+                <td class="align-middle"> '.$item->name.' </td>
+                <td class="align-middle"> '.$item->content.' </td>
+                <td class="align-middle"> '.$item->timestart.' </td>
+                <td class="align-middle"> '.$item->timeend.' </td>
+                <td class="align-middle">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                     <a  href="/EditSer/'.$item->id.'" class="btn btn-warning">Edit</a>
+                     <a id="deleteBtn" href="checkDelete/'.$item->id.'" class="btn btn-danger">Delete</a>
+                </div>
+             </td>
+                </tr>
+                ';
+            }
+            return response($output);
         }
     }
     public function deleteSeminar($id){

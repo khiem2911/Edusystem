@@ -41,41 +41,34 @@
 </head>
 
 <body id="page-top">
-    <!-- Page Wrapper -->
     <div id="wrapper">
-
-        <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url('/')}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Seminar Edusystem </div>
             </a>
-
-            <!-- Divider -->
+            
             <hr class="sidebar-divider my-0">
-
-          
-
-
+            <br>
+            <div class="d-flex flex-column align-items-center ">
+                <li><a class="sidebar-brand" href="{{url('/')}}">Khiêm</a></li>
+                <li><a class="sidebar-brand" href="">Kiên</a></li>
+                <li><a class="sidebar-brand" href="">Quốc</a></li>
+                <li><a class="sidebar-brand" href="">Điền</a> </li>
+                <li><a class="sidebar-brand" href="">Oanh</a></li>
+            </div>
         </ul>
-      
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
                     <div class="container">
                         <div class="search">
                             <input type="search" name="search" id="search" placeholder="Search seminar here" class="form-control" >
@@ -132,20 +125,25 @@
               </button>
             </div>
             <div class="modal-body">
-                <form action="{{route("addSermina")}}" method="post">
+                <form id="comment" action="" method="post">
                     {{ csrf_field() }}
-                    <h3><b>Name Seminar </b></h3>
-                    <input value="<?php echo(old("name")); ?>" type="text" name="name" placeholder="Nhập tên hội nghị"> 
-                    <h3><b>Conent Seminar</b></h3>
-                    <input value="<?php echo(old("content")); ?>" type="text" name="content" placeholder="Nhập nội dung">
+                    <div class="form-floating mb-3">
+                        <input id="name" value="<?php echo(old("name")); ?>" type="text" class="form-control" name="name" id="floatingInput" placeholder="Nhập tên hội nghị">
+                        <label for="floatingInput">Name Seminar</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input id="contents" value="<?php echo(old("content")); ?>" type="text" class="form-control" name="content" id="floatingInput" placeholder="Nhập nội dung hội nghị">
+                        <label for="floatingInput">Content Seminar</label>
+                      </div>
+                     
                     <br>    
                     <h3><b>Time start</b> </h3>
-                    <input name="timestart" type="datetime-local" value="<?php echo(old("timestart")); ?>" />
+                    <input id="timeStart" name="timestart" type="datetime-local" value="<?php echo(old("timestart")); ?>" />
                     <br>
                     <h3><b>Time end</b></h3>
-                    <input name="timeend" type="datetime-local" value="<?php echo(old("timeend")); ?>" />
+                    <input id="timeEnd" name="timeend" type="datetime-local" value="<?php echo(old("timeend")); ?>" />
                     <br>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button id="testbtn" type="submit" class="btn btn-primary">Save changes</button>
                 </form>
             </div>
           </div>
@@ -176,11 +174,43 @@
     })
     $("#closeModalBtn").click(function(){
       $("#myModal").modal("hide");
-    })
+    })  
+    $( '#comment' ).on( 'submit', function(e) {
+        e.preventDefault();
+        $("#myModal").modal("hide");
+        var name = $('#name').val();
+        var content = $('#contents').val();
+        var timestart = $('#timeStart').val();
+        var timeend = $('#timeEnd').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        $.ajax({
+            method:"POST",
+            url:"/test",
+            data:{
+                'name':name,
+                'content':content,
+                'timestart':timestart,
+                'timeend':timeend
+            }
+                ,
+            success:function(data)
+            {
+                console.log(data);
+            }, 
+            error: (error) => {
+                console.log(error);
+   }
+    });
+});
   $(document).on('click', '#deleteBtn',function(event)
     {
         return confirm('are you sure you want to delete this ');
     });
+    
     $(document).on('click', '.pagination a',function(event)
     {
         event.preventDefault();
