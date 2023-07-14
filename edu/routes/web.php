@@ -12,12 +12,11 @@ use App\Http\Controllers\SeminarController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::post('checkAdd',[SeminarController::class, 'addSeminar'])->name("addSermina");
 Route::get('/', [SeminarController::class, 'loadData'])->name("home");
-Route::get('checkDelete/{id}',[SeminarController::class, 'deleteSeminar'])->name("deleteSeminar");
-Route::post('deleteAll',[SeminarController::class, 'deleteAllSeminar']);
+Route::get('/checkDelete',[SeminarController::class, 'deleteSeminar'])->name("deleteSeminar");
+Route::post('deleteAll',[SeminarController::class, 'deleteAllSeminar'])->name("deleteAll");
 Route::get('EditSer/{id}',[SeminarController::class, 'editSeminar'])->name("editSeminar");
 Route::post('updateSer/{id}',[SeminarController::class, 'updateSeminar'])->name("updateSeminar");
 Route::get('/search',[SeminarController::class, 'searchSeminar'])->name("search");
 Route::get('/filter',[SeminarController::class, 'filterSeminar'])->name("filter");
-Route::post('test',[SeminarController::class, 'test'])->name("test");
+Route::post('checkAdd',[SeminarController::class, 'addSeminar'])->name("addSeminar");

@@ -109,7 +109,7 @@
               <div id="item-lists">
               @include('data')
             </div>
-            </form>
+        </form>
         </div>
     </div>
     @include('sweetalert::alert')
@@ -155,6 +155,10 @@
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
@@ -189,7 +193,7 @@
         });
         $.ajax({
             method:"POST",
-            url:"/test",
+            url:"/checkAdd",
             data:{
                 'name':name,
                 'content':content,
@@ -199,18 +203,60 @@
                 ,
             success:function(data)
             {
-                console.log(data);
-            }, 
+                Swal.fire({
+                    type: 'success',
+  title: 'Nofication',
+  text: 'Added Successed',
+}),
+            $('#item-lists').html(data.html);
+            },
             error: (error) => {
                 console.log(error);
    }
     });
 });
-  $(document).on('click', '#deleteBtn',function(event)
-    {
-        return confirm('are you sure you want to delete this ');
-    });
-    
+$(document).on('click','#deletebtn',function(event){
+    event.preventDefault();
+    var id = $(this).data("id");
+    Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+           if(result.value==true)
+           {
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        $.ajax({
+            method:"GET",
+            url:"{{route('deleteSeminar')}}",
+            data:{
+                'id':id,
+            }
+                ,
+            success:function(data)
+            {
+                Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    )
+    $('#item-lists').html(data.html);
+            }, 
+            error: (error) => {
+                console.log(error);
+   }
+        })
+           }
+        })
+});
     $(document).on('click', '.pagination a',function(event)
     {
         event.preventDefault();

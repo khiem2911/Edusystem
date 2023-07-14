@@ -66,7 +66,7 @@ class SeminarController extends Controller
         }
         }
     }
-    public function test(Request $request)  {
+    public function addSeminar(Request $request)  {
         $name = $request->name;
         $content = $request->content;
         $timestart = $request->timestart;
@@ -75,47 +75,26 @@ class SeminarController extends Controller
         $values = array('name' => $name,'content' => $content,'timestart'=>$timestart,'timeend'=>$timeend);
         try{
             $query=DB::table('Seminar')->insert($values);
+            $data = DB::table('Seminar')->paginate(5);
+            $html = view('data', compact('data'))->render();
+            return response()->json([
+                'status' => true,
+                'html' => $html,
+            ]);
           }catch(Exception)
           {
              $alert = alert()->error('Failed','Kiểm tra lại các ô nhập');
              $request->flash();
           }
-        if($query)
-        {
-            alert()->success('Added Successed');
-            $items = DB::table('Seminar')->paginate(5);
-            $output="";
-            foreach($items as $item)
-            {
-                $output.=
-                '
-                <tr>
-                <td class="text-center align-middle"><input name="id[]" type="checkbox" id="checkItem" 
-                value='.$item->id.'>
-                <td class="align-middle"> '.$item->id.' </td>
-                <td class="align-middle"> '.$item->name.' </td>
-                <td class="align-middle"> '.$item->content.' </td>
-                <td class="align-middle"> '.$item->timestart.' </td>
-                <td class="align-middle"> '.$item->timeend.' </td>
-                <td class="align-middle">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                     <a  href="/EditSer/'.$item->id.'" class="btn btn-warning">Edit</a>
-                     <a id="deleteBtn" href="checkDelete/'.$item->id.'" class="btn btn-danger">Delete</a>
-                </div>
-             </td>
-                </tr>
-                ';
-            }
-            return response($output);
-        }
     }
-    public function deleteSeminar($id){
-        $deleted = DB::table('Seminar')->where('id', '=', $id)->delete();
-        if($deleted)
-        {
-            alert()->success('Delete Successed');
-            return redirect()->route("home");
-        }
+    public function deleteSeminar(Request $request){
+        $deleted = DB::table('Seminar')->where('id', '=', $request->id)->delete();
+        $data = DB::table('Seminar')->paginate(5);
+        $html = view('data', compact('data'))->render();
+            return response()->json([
+                'status' => true,
+                'html' => $html,
+            ]);
     }
     public function updateSeminar(Request $request,$id){
         $name = $request->name;
