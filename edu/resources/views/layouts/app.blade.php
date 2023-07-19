@@ -203,7 +203,7 @@
                 ,
             success:function(data)
             {
-                Swal.fire({
+                    Swal.fire({
                     type: 'success',
   title: 'Nofication',
   text: 'Added Successed',
