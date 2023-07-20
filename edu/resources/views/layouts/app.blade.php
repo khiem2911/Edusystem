@@ -52,13 +52,7 @@
             
             <hr class="sidebar-divider my-0">
             <br>
-            <div class="d-flex flex-column align-items-center ">
-                <li><a class="sidebar-brand" href="{{url('/')}}">Khiêm</a></li>
-                <li><a class="sidebar-brand" href="">Kiên</a></li>
-                <li><a class="sidebar-brand" href="">Quốc</a></li>
-                <li><a class="sidebar-brand" href="">Điền</a> </li>
-                <li><a class="sidebar-brand" href="">Oanh</a></li>
-            </div>
+            
         </ul>
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
